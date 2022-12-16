@@ -13,7 +13,7 @@ import pandas as pd
 
 #Obtención de todos los circuitos en csv
 
-circuitos = pd.read_csv("circuits/circuits_2022.csv")
+circuitos = pd.read_csv("../circuits/circuits_2022.csv")
 circuitos
 
 
@@ -56,7 +56,7 @@ circuitos_desgaste
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) #Omitimos los future warning
 
-fastf1.Cache.enable_cache('cache') # Para cachear los datos y no tener que bajarlos todo el tiempo
+fastf1.Cache.enable_cache('../cache') # Para cachear los datos y no tener que bajarlos todo el tiempo
 
 #A continuacion, nos guardamos la sesión en una variable de tipo sesion
 
@@ -272,7 +272,7 @@ laps_barcelona_alo
 # In[29]:
 
 
-laps_barcelona_alo.to_csv("laps_barcelona_alo.csv", index=False)
+laps_barcelona_alo.to_csv("../datasets/laps_barcelona_alo.csv", index=False)
 
 
 # In[ ]:

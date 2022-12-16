@@ -4,7 +4,7 @@ import pandas as pd
 
 #Obtención de todos los circuitos en csv
 
-circuitos = pd.read_csv("circuits/circuits_2022.csv")
+circuitos = pd.read_csv("../circuits/circuits_2022.csv")
 
 #Limpiamos el dataframe de circuitos
 print("Circuitos disponibles: ")
@@ -38,7 +38,7 @@ anyoGp = input("Introduce el año del GP (2017-2022): ")
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) #Omitimos los future warning
 
-fastf1.Cache.enable_cache('cache') # Para cachear los datos y no tener que bajarlos todo el tiempo
+fastf1.Cache.enable_cache('../cache') # Para cachear los datos y no tener que bajarlos todo el tiempo
 
 #A continuacion, nos guardamos la sesión en una variable de tipo sesion
 
@@ -165,5 +165,5 @@ laps_race_pilot
 # - Durante todas sus vueltas
 
 
-laps_race_pilot.to_csv("laps_" + nombreCircuito + "_" + nombrePiloto  + ".csv", index=False)
+laps_race_pilot.to_csv("../datasets/laps_" + nombreCircuito + "_" + nombrePiloto  + ".csv", index=False)
 
