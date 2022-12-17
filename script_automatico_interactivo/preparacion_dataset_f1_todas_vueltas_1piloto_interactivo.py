@@ -1,7 +1,8 @@
 
 import fastf1
 import pandas as pd
-
+import requests
+import json
 #Obtención de todos los circuitos en csv
 
 circuitos = pd.read_csv("../circuits/circuits_2022.csv")
@@ -51,6 +52,13 @@ race.results['Abbreviation']
 print(race.results['Abbreviation'].to_string(index=False))
 
 nombrePiloto = input("Introduce un piloto: ")
+
+#Creamos un diccionario para tener los nombres de los pilotos en Ergast y en FastF1 (para poder sacar la posicion por cada vuelta)
+#ya que la api tiene la pinta del valor y fastf1 tiene la pinta de la clave (en el diccionario)
+pilotosDic = {"HAM":"hamilton", "VER":"max_verstappen", "BOT": "bottas", "NOR":"norris", "PER":"perez", "LEC":"leclerc",
+             "RIC":"ricciardo", "SAI":"sainz", "TSU":"tsunoda", "STR":"stroll", "RAI":"raikkonen", "GIO":"giovinazi",
+              "OCO":"ocon", "RUS":"russel", "VET":"vettel", "MSC":"mick_schumacher", "GAS":"GASLY", "LAT":"latifi",
+             "ALO":"alonso", "MAZ":"mazepin"}
 
 laps_race_pilot = race.laps.pick_driver(nombrePiloto)
 weather = race.weather_data # Cogemos tambien el tiempo que hizo al inicio de la carrera
@@ -111,6 +119,26 @@ circuito_actual = circuito_actual.filter(['circuitName', 'desgaste', 'vueltas_to
 
 
 
+roundNumber = race.event.RoundNumber
+pilotoNombre=pilotosDic[nombrePiloto]
+posicionesList = []
+
+
+#El numero de vuelta es una iteracion a cada fila del dataframe de vueltas del piloto
+
+for index, row in laps_race_pilot.iterrows():
+    nVuelta = int(row['LapNumber'])
+    #Construimos la URL de la api
+    api = "http://ergast.com/api/f1/" + anyoGp + "/" + str(roundNumber) + "/drivers/" +pilotoNombre+ "/laps/" + str(nVuelta) +".json"
+    response = requests.get(api)
+    response_dict = json.loads(response.text)
+    posicion = response_dict['MRData']['RaceTable']['Races'][0]['Laps'][0]['Timings'][0]['position']
+    posicionesList.append(posicion)
+
+laps_race_pilot['posicionActual'] = posicionesList
+
+
+
 #Hay que hacer una funcion para sacar el numero de vueltas (nVueltas) que se ha dado en ese circuito, y repetir nVueltas para crear una lista con el valor
 nVueltasCircuito=laps_race_pilot.tail(1).LapNumber.values[0]
 circuitName = circuito_actual.circuitName.values[0]
@@ -165,5 +193,4 @@ laps_race_pilot
 # - Durante todas sus vueltas
 
 
-laps_race_pilot.to_csv("../datasets/laps_" + nombreCircuito + "_" + nombrePiloto  + ".csv", index=False)
-
+laps_race_pilot.to_csv("../datasets/laps_" + nombreCircuito + "_" + nombrePiloto  +"_" +anyoGp+ ".csv", index=False)
