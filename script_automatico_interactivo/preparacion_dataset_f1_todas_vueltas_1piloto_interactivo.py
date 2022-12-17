@@ -86,6 +86,9 @@ laps_race_pilot['Time'] = laps_race_pilot["Time"].apply(lambda x: x[7:12])
 #Hacemos el join para meter en el mismo dataset, la imformacion en cada vuelta de la temperatura ambiente y de la pista
 laps_race_pilot = laps_race_pilot.set_index('Time').join(weather.set_index('Time'))
 
+laps_race_pilot['LapTime'] = laps_race_pilot['LapTime'].astype(str)
+laps_race_pilot["LapTime"] = laps_race_pilot["LapTime"].apply(lambda x: x[10:19] if x!="NaT" else '0')
+
 
 #Para la posicion de salida
 posicion_salida = race.get_driver(nombrePiloto)['GridPosition']
