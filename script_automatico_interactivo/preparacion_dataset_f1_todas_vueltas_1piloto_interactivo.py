@@ -3,6 +3,7 @@ import fastf1
 import pandas as pd
 import requests
 import json
+import time
 #Obtención de todos los circuitos en csv
 
 circuitos = pd.read_csv("../circuits/circuits_2022.csv")
@@ -137,6 +138,7 @@ for index, row in laps_race_pilot.iterrows():
     response_dict = json.loads(response.text)
     posicion = response_dict['MRData']['RaceTable']['Races'][0]['Laps'][0]['Timings'][0]['position']
     posicionesList.append(posicion)
+    time.sleep(0.5)
 
 laps_race_pilot['posicionActual'] = posicionesList
 
