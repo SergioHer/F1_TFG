@@ -1,8 +1,6 @@
 cache/*
 datasets/*
 circuits/*
-db/*
 datasets_completos/*
-ergast_apache/*
-ergast_docker/*
+ergast_backup/*
 
