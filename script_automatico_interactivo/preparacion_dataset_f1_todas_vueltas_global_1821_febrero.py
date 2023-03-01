@@ -49,6 +49,7 @@ fastf1.Cache.enable_cache('../cache') # Para cachear los datos y no tener que ba
 #A continuacion, nos guardamos la sesión en una variable de tipo sesion
 
 for anyo in anyosGp:
+    print("Sacando info para el anyo " + str(anyo))
     race = fastf1.get_session(anyo, nombreCircuito, 'R')
     race.load(weather=True, telemetry= True)
 
@@ -127,10 +128,16 @@ for anyo in anyosGp:
     #Aqui ahora tenemos que hacer un match de el nombre que ha introducido el usuario, con el nombre que salga en el dataset
     circuito_actual = circuitos_desgaste.loc[circuitos_desgaste['Location/country'].str.lower() == nombreCircuito.lower()]
     circuito_actual = circuito_actual.filter(['circuitName', 'desgaste', 'vueltas_totales', 'km_total'])
+    circuito_actual
+    vueltasOficialesCircuito = circuito_actual['vueltas_totales'].iloc[0]
 
+    disminuido = False
     nVueltasDadas = int(laps_race_pilot.tail(1)['LapNumber'].iloc[0])
+    if (str(nVueltasDadas) == vueltasOficialesCircuito):
+        nVueltasDadas = nVueltasDadas -1
+        disminuido = True
 
-    roundNumber=race.event.RoundNumber
+    roundNumber = race.event.RoundNumber
     pilotoNombre=pilotosDic[nombrePiloto]
     posicionesList = []
     pilotoDelanteList = []
@@ -142,14 +149,12 @@ for anyo in anyosGp:
     #Llamada a api de posiciones
     api = "http://ergast.com/api/f1/" + str(anyo) + "/" + str(roundNumber) + "/drivers/" +pilotoNombre + "/laps.json?limit=100"
     response = requests.get(api)
-    print("Llamada a la API")
     posiciones_dict = json.loads(response.text)
     #Llamada a api de pilotos y tiempo
     api = "http://ergast.com/api/f1/" + str(anyo) + "/" + str(roundNumber) + "/" + "laps.json?limit=4000"
     response = requests.get(api)
-    print("Llamada a la API")
     pilotos_dict = json.loads(response.text)
-
+        
     #El numero de vuelta es una iteracion a cada fila dell dataframe de vueltas del piloto
 
     for nVuelta in range (0, nVueltasDadas):
@@ -175,7 +180,12 @@ for anyo in anyosGp:
 
 
 
-
+    if (disminuido):
+        posicionesList.append("NaN")
+        pilotoDelanteList.append("NaN")
+        tiempoPilotoDelanteList.append("NaN")
+        pilotoDetrasList.append("NaN")
+        tiempoPilotoDetrasList.append("NaN")
 
     laps_race_pilot['posicionActual'] = posicionesList
     laps_race_pilot['pilotoDelante'] = pilotoDelanteList
