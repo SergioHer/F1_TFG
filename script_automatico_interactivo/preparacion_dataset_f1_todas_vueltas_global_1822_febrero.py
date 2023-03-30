@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 import json
 import time
+import math
 #Obtención de todos los circuitos en csv
 
 circuitos = pd.read_csv("../circuits/circuits_2022.csv")
@@ -35,7 +36,7 @@ nombreCircuito = input("Introduce el pais de un Gran Premio: ")
 if nombreCircuito == "Belgium": 
     anyosGp = [2018, 2019, 2020]
 else:
-    anyosGp = [2018, 2019, 2020, 2021]
+    anyosGp = [2018, 2019, 2020, 2021, 2022]
 
 nombrePiloto = ""
 iter = 0
@@ -207,6 +208,7 @@ for anyo in anyosGp:
         
     #La salida se la tenemos que meter a todas las filas del dataframe
     laps_race_pilot['posicionSalida'] = posicion_salida
+    laps_race_pilot['anyo']= anyo
 
 
     # laps_race_pilot['circuitName'] = circuitName
@@ -250,6 +252,23 @@ for anyo in anyosGp:
     # - Un piloto
     # - En un gran premio
     # - Durante todas sus vueltas
+
+    #Esto añade una columna al lado de la de stint para ver si esa vuelta ha parado o no, siendo 1 que si y 0 que no
+
+    lista = []
+    anterior = 1
+    for valor in laps_race_pilot['Stint']:
+        if (valor == anterior) or (math.isnan(valor)):
+            lista.append(0)
+        else:
+            lista.append(1)
+        anterior = valor
+    try:
+        laps_race_pilot.insert(8, "makeStop", lista, False)
+    except:
+      print("No se ha podido añadir, ya existe")
+
+
 
 
    # laps_race_pilot.to_csv("../datasets/laps_" + nombreCircuito + "_" + nombrePiloto  +"_" +anyoGp+ ".csv", index=False)
