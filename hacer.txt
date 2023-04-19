@@ -1,0 +1,5 @@
+1. Hacer las métricas de LSTM
+2. Hacer el modelo de clasificacion cambiando el mse por binary (me dara negativo o positivo. Si es positivo es 1 y si no 0. Todo esto con el makeStop)
+3. Probar con el modelo BERT (avanzado)
+4. Subir a github
+5. Probar la RNN simple
