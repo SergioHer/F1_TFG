@@ -3,3 +3,14 @@
 3. Probar con el modelo BERT (avanzado)
 4. Subir a github
 5. Probar la RNN simple
+
+
+
+
+0.67542743 -> 1
+0.42817299 -> 0.66
+0.17569729 -> 0.33
+0 -> 0
+
+1. Sacar los puntos discriminatorios entre clases
+2. Hacer 20 ejecuciones para cada modelo y guardar las métricas con ficheros de lo que se ha predicho
