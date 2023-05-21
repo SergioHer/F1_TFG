@@ -1,0 +1,16 @@
+Matriz de confusión:
+[0.   0.25 0.5  0.75 1.  ]
+[[ 77   7   0]
+ [  1 102   1]
+ [  0   4   0]]
+Métricas:
+              precision    recall  f1-score   support
+
+           0       0.99      0.92      0.95        84
+           1       0.90      0.98      0.94       104
+           2       0.00      0.00      0.00         4
+
+    accuracy                           0.93       192
+   macro avg       0.63      0.63      0.63       192
+weighted avg       0.92      0.93      0.93       192
+

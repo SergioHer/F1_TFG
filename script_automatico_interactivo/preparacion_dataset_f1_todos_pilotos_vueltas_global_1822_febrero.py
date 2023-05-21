@@ -270,7 +270,12 @@ for anyo in anyosGp:
             if (len(paradasList_insertar) == 0):
                 laps_race_pilot['nextPit'] = nVueltasDadas
             else:
-                laps_race_pilot['nextPit'] = paradasList_insertar
+                if (len(paradasList_insertar) != laps_race_pilot.shape[0]):
+                    laps_race_pilot['nextPit'] = pd.Series(paradasList_insertar[:len(laps_race_pilot)])
+                    # Rellenar los valores restantes con el último valor introducido
+                    laps_race_pilot['nextPit'] = laps_race_pilot['nextPit'].fillna(method='ffill')
+                else:
+                    laps_race_pilot['nextPit'] = paradasList_insertar
 
 
         # En principio, ahora tenemos el dataset para:
