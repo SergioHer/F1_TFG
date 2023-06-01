@@ -41,7 +41,7 @@ else:
 
 nombrePiloto = ""
 iter = 0
-dataframeFinal = pd.DataFrame()
+vueltas = pd.DataFrame()
 
 #Vamos entonces a crear un dataframe para un piloto en una determinada 
 #carrera, por ejemplo, Fernando Alonso y Monaco 2022
@@ -166,7 +166,6 @@ for anyo in anyosGp:
         #El numero de vuelta es una iteracion a cada fila dell dataframe de vueltas del piloto
 
         for nVuelta in range (0, nVueltasDadas):
-            print(nVuelta, nVueltasDadas)
             #Para la posicion por cada vuelta
             try:
                 posicion = posiciones_dict['MRData']['RaceTable']['Races'][0]['Laps'][nVuelta]['Timings'][0]['position']
@@ -177,8 +176,7 @@ for anyo in anyosGp:
                 tiempoPilotoDelante = pilotos_dict['MRData']['RaceTable']['Races'][0]['Laps'][nVuelta]['Timings'][int(posicion)-2]['time']
                 pilotoDelanteList.append(pilotoDelante)
                 tiempoPilotoDelanteList.append(tiempoPilotoDelante)
-                print("Voy el: ", posicion)  
-                print("Tengo delante a : ", pilotoDelante)
+
             except:
                 print("No he podido coger esa vuelta")
                 posicionesList.append("NaN")
@@ -191,7 +189,6 @@ for anyo in anyosGp:
                 tiempoPilotoDetras = pilotos_dict['MRData']['RaceTable']['Races'][0]['Laps'][nVuelta]['Timings'][int(posicion)]['time']
                 pilotoDetrasList.append(pilotoDetras)
                 tiempoPilotoDetrasList.append(tiempoPilotoDetras)  
-                print("Tengo detras a : ", pilotoDetras)  
             except:
                 disminido = True
                 print("Esa vuelta no la he podido coger")
@@ -207,7 +204,6 @@ for anyo in anyosGp:
             pilotoDetrasList.append("NaN")
             tiempoPilotoDetrasList.append("NaN")
 
-        print(len(laps_race_pilot), len(pilotoDetrasList))
         laps_race_pilot['posicionActual'] = posicionesList
         laps_race_pilot['pilotoDelante'] = pilotoDelanteList
         laps_race_pilot['tiempoPilotoDelante'] = tiempoPilotoDelanteList
@@ -296,6 +292,7 @@ for anyo in anyosGp:
                 lista.append(1)
             anterior = valor
         try:
+            lista = lista[1:] + [0] #Muevo todos a la izquierda y relleno con un 0
             laps_race_pilot.insert(8, "makeStop", lista, False)
         except:
           print("No se ha podido añadir, ya existe")
@@ -303,19 +300,22 @@ for anyo in anyosGp:
 
 
 
+
        # laps_race_pilot.to_csv("../datasets/laps_" + nombreCircuito + "_" + nombrePiloto  +"_" +anyoGp+ ".csv", index=False)
-        dataframeFinal = pd.concat([dataframeFinal, laps_race_pilot], axis = 0)
+        vueltas = pd.concat([vueltas, laps_race_pilot], axis = 0)
 
-#dataframeFinal.to_csv("../dataset_todos_pilotos/laps_" + nombreCircuito + ".csv", index=False)
+vueltas.to_csv("../dataset_todos_pilotos/laps_" + nombreCircuito + ".csv", index=False)
 
-dataframeFinal = dataframeFinal[dataframeFinal['LapTime'] != '0']
+vueltas = pd.read_csv('../dataset_todos_pilotos/laps_spain.csv')
+
+
+vueltas = vueltas[vueltas['LapTime'] != '0']
 
 def convert_to_seconds(t):
     return (t - datetime(1900,1,1)).total_seconds()
 
 def tiempo_a_float(tiempo):
     try:
-        print(tiempo)
         minutos, segundos = map(float, tiempo.split(':'))
         segundos = str(segundos)
         segundos, milisegundos = map(float, segundos.split('.'))
@@ -324,27 +324,27 @@ def tiempo_a_float(tiempo):
     except:
         print("Era nan")
 
-dataframeFinal['tiempoPilotoDelante'] = dataframeFinal['tiempoPilotoDelante'].apply(tiempo_a_float)
-dataframeFinal['tiempoPilotoDetras'] = dataframeFinal['tiempoPilotoDetras'].apply(tiempo_a_float)
-dataframeFinal['LapTime'] = dataframeFinal['LapTime'].apply(tiempo_a_float)
+vueltas['tiempoPilotoDelante'] = vueltas['tiempoPilotoDelante'].apply(tiempo_a_float)
+vueltas['tiempoPilotoDetras'] = vueltas['tiempoPilotoDetras'].apply(tiempo_a_float)
+vueltas['LapTime'] = vueltas['LapTime'].apply(tiempo_a_float)
 
-dataframeFinal = dataframeFinal.dropna()
+vueltas = vueltas.dropna()
 
 # Creo variables dummies (one hot encoding)
 
-dummies_compound = pd.get_dummies(dataframeFinal['Compound'], prefix='compound')
-dataframeFinal = pd.concat([dataframeFinal, dummies_compound], axis=1)
-dataframeFinal.drop('Compound', axis=1, inplace=True)
-dataframeFinal['FreshTyre'] = dataframeFinal['FreshTyre'].astype(int)
-dataframeFinal['Rainfall'] = dataframeFinal['Rainfall'].astype(int)
+dummies_compound = pd.get_dummies(vueltas['Compound'], prefix='compound')
+vueltas = pd.concat([vueltas, dummies_compound], axis=1)
+vueltas.drop('Compound', axis=1, inplace=True)
+vueltas['FreshTyre'] = vueltas['FreshTyre'].astype(int)
+vueltas['Rainfall'] = vueltas['Rainfall'].astype(int)
 
 #Vamos a hacer una aproximacion sin utilizar lo de pilotoDelante y pilotoDetras, solo el tiempo
-dataframeFinal.drop(['pilotoDelante', 'pilotoDetras' ], axis=1, inplace=True)
+vueltas.drop(['pilotoDelante', 'pilotoDetras' ], axis=1, inplace=True)
 
-dataframeFinal = dataframeFinal.dropna()
-vueltasFinal = dataframeFinal
+vueltas = vueltas.dropna()
+vueltasFinal = vueltas
 
-vueltasFinal.to_csv("../dataset_todos_pilotos/" + nombreCircuito +".csv ", index=False)
+vueltasFinal.to_csv("../dataset_todos_pilotos/final/laps_" + nombreCircuito +"_final_v2" + ".csv ", index=False)
 
 
 
