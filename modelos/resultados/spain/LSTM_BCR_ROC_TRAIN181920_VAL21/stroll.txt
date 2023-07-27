@@ -1,0 +1,17 @@
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.79      0.87        52
+         1.0       0.15      0.67      0.25         3
+
+    accuracy                           0.78        55
+   macro avg       0.57      0.73      0.56        55
+weighted avg       0.93      0.78      0.84        55
+
+Exactitud dentro del rango de vueltas: 0.67
+Vueltas en las que se ha acertado la parada o está dentro del rango con rango seteado a 2: [6, 19]
+Precisión: 0.67
+F1-score: 0.80
+Exactitud sin rango de vueltas: 0.00
+Precisión: 0.00
+F1-score: 0.00
+El threeshold ha sido: 0.21421632170677185
