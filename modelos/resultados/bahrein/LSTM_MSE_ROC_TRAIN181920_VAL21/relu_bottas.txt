@@ -14,4 +14,4 @@ F1-score: 0.00
 Exactitud sin rango de vueltas: 0.00
 Precisión: 0.00
 F1-score: 0.00
-El threeshold ha sido: 0.7462455034255981
+El threeshold ha sido: 5.477962017059326
