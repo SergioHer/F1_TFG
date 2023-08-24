@@ -1,6 +1,5 @@
 cache/*
-datasets/*
-circuits/*
-datasets_completos/*
 ergast_backup/*
+.ipynb_checkpoints/*
+
 
