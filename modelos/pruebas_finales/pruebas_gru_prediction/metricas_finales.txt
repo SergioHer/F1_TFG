@@ -1,0 +1,4 @@
+{
+    "Media accuracy": 0.2888888888888889,
+    "Desviaci\u00f3n est\u00e1ndar": 0.23327873720891076
+}

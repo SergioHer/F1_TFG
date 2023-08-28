@@ -1,0 +1,3 @@
+Piloto: max_verstappen
+Media de Precisión: 0.29
+Desviación Estándar: 0.16
